@@ -9,13 +9,14 @@ from tqdm.auto import tqdm
 
 blacklist_word = []
 
+artist_name = 'Metallica'
 # path = "C:\chromedriver.exe"
 path = 'chromedriver.exe'
 
 def save_to_file(filename, lyrics):
 
-	if os.path.exists('Metallica') == False:
-		os.mkdir('Metallica')
+	if os.path.exists(artist_name) == False:
+		os.mkdir(artist_name)
 
 
 	if 'Lyrics' in filename:
@@ -25,7 +26,7 @@ def save_to_file(filename, lyrics):
 			filename = filename.replace(not_allowed_char, '')
 		filename = filename.strip()
 
-	f = open("Metallica/" + filename + ".txt", "w")
+	f = open(artist_name +"/" + filename + ".txt", "w",encoding="utf-8")
 	f.write(str(lyrics))
 	f.close()
 
@@ -65,7 +66,7 @@ for link in tqdm(songs_link ,desc = 'Downloading Lyrics'):
 	except:
 		driver.quit()
 	for lyrics in lyrics_songs:
-		save_to_file(song_title,lyrics.text.encode("utf-8"))
+		save_to_file(song_title,lyrics.text)
 driver.quit()
 
 
