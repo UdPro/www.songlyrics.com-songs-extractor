@@ -37,10 +37,11 @@ def read_file():
 		f = open('Metallica/' + file, 'r')
 		songs[file.replace('.txt', '').strip()] = f.read()
 
-op = webdriver.ChromeOptions()
-op.add_argument('headless')
-driver = webdriver.Chrome(path,options=op)
-# driver = webdriver.Chrome(path)
+# Uncomment if you want to use without opening browser
+# op = webdriver.ChromeOptions()
+# op.add_argument('headless')
+# driver = webdriver.Chrome(path,options=op)
+driver = webdriver.Chrome(path)
 driver.get("http://www.songlyrics.com/metallica-lyrics/")
 # find songs in box css
 box_of_song = driver.find_elements(By.CLASS_NAME, 'listbox')
