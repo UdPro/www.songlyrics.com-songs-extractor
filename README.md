@@ -1,2 +1,7 @@
 # www.songlyrics.com songs-extractor
-* Download 
+
+## Dependecies
+tqdm 
+```pip install tqdm```
+selenium 
+```pip install selenium```
