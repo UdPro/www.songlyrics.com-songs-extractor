@@ -42,7 +42,7 @@ def read_file():
 op = webdriver.ChromeOptions()
 op.add_experimental_option('excludeSwitches', ['enable-logging'])
 # op.add_argument('excludeSwitches')
-driver = webdriver.Chrome(path,options=op)
+driver = webdriver.Chrome(path)
 driver.get("http://www.songlyrics.com/metallica-lyrics/")
 # find songs in box css
 box_of_song = driver.find_elements(By.CLASS_NAME, 'listbox')
