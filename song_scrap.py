@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
 import time
-from tqdm import tqdm
+from tqdm.auto import tqdm
 
 blacklist_word = []
 
@@ -38,26 +38,29 @@ def read_file():
 		songs[file.replace('.txt', '').strip()] = f.read()
 
 # Uncomment if you want to use without opening browser
-# op = webdriver.ChromeOptions()
-# op.add_argument('headless')
-# driver = webdriver.Chrome(path,options=op)
-driver = webdriver.Chrome(path)
+op = webdriver.ChromeOptions()
+op.add_experimental_option('excludeSwitches', ['enable-logging'])
+# op.add_argument('excludeSwitches')
+driver = webdriver.Chrome(path,options=op)
 driver.get("http://www.songlyrics.com/metallica-lyrics/")
 # find songs in box css
 box_of_song = driver.find_elements(By.CLASS_NAME, 'listbox')
 # finding element with song a tag
 songs_list = box_of_song[0].find_elements(By.TAG_NAME, 'a')
 songs_link = []
-for song in songs_list:
+for song in tqdm(songs_list, desc = 'Extracting :'):
 	# extracting link value
 	songs_link.append(song.get_attribute('href'))
-for link in tqdm(songs_link):
+for link in tqdm(songs_link ,desc = 'Download Lyrics:'):
 	# link = 'http://www.songlyrics.com/metallica/the-unforgiven-ii-lyrics/'
 	driver.get(link)
-	# song_name = WebDriverWait(driver,10).until(lambda d: d.find_elements(By.TAG_NAME, 'h1'))
-	song_name = driver.find_elements(By.TAG_NAME, 'h1')
-	song_title = song_name[0].text
-	lyrics_songs = driver.find_elements(By.ID, 'songLyricsDiv')
+	try:
+		song_name = WebDriverWait(driver,10).until(lambda d: d.find_elements(By.TAG_NAME, 'h1'))
+		# song_name = driver.find_elements(By.TAG_NAME, 'h1')
+		song_title = song_name[0].text
+		lyrics_songs = driver.find_elements(By.ID, 'songLyricsDiv')
+	except:
+		driver.quit()
 	for lyrics in lyrics_songs:
 		save_to_file(song_title,lyrics.text.encode("utf-8"))
 driver.quit()
