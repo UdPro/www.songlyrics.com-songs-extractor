@@ -9,7 +9,8 @@ from tqdm.auto import tqdm
 
 blacklist_word = []
 
-path = "C:\chromedriver.exe"
+# path = "C:\chromedriver.exe"
+path = 'chromedriver.exe'
 
 def save_to_file(filename, lyrics):
 
