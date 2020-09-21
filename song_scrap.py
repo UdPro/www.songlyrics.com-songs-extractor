@@ -5,26 +5,30 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
 import time
-import string,random
+from tqdm import tqdm
+
+blacklist_word = []
+
 path = "C:\chromedriver.exe"
 
 def save_to_file(filename, lyrics):
-	# if not os.path.exists(path):
-	# 	os.mkdir('Metallica')
+
 	if os.path.exists('Metallica') == False:
 		os.mkdir('Metallica')
+
+
 	if 'Lyrics' in filename:
 		filename = filename.replace('Lyrics', '')
 		# removing char which are not allowed in windows rule for renameing
-		for not_allowed_char in ['/'. '\\', ':','*', '?', '<', '>','|']:
+		for not_allowed_char in ['/', '\\', ':','*', '"', '?', '<', '>','|']:
 			filename = filename.replace(not_allowed_char, '')
 		filename = filename.strip()
+
 	f = open("Metallica/" + filename + ".txt", "w")
-	try:
-		f.write(lyrics)
-	except:
-		print(lyrics)
+	f.write(str(lyrics))
 	f.close()
+
+
 def read_file():
 	filename = os.listdir('Metallica')
 	songs = {}
@@ -33,7 +37,10 @@ def read_file():
 		f = open('Metallica/' + file, 'r')
 		songs[file.replace('.txt', '').strip()] = f.read()
 
-driver = webdriver.Chrome(path)
+op = webdriver.ChromeOptions()
+op.add_argument('headless')
+driver = webdriver.Chrome(path,options=op)
+# driver = webdriver.Chrome(path)
 driver.get("http://www.songlyrics.com/metallica-lyrics/")
 # find songs in box css
 box_of_song = driver.find_elements(By.CLASS_NAME, 'listbox')
@@ -43,15 +50,15 @@ songs_link = []
 for song in songs_list:
 	# extracting link value
 	songs_link.append(song.get_attribute('href'))
-for link in songs_link:
+for link in tqdm(songs_link):
 	# link = 'http://www.songlyrics.com/metallica/the-unforgiven-ii-lyrics/'
 	driver.get(link)
-	song_name = WebDriverWait(driver,10).until(lambda d: d.find_elements(By.TAG_NAME, 'h1'))
-	# song_name = driver.find_elements(By.TAG_NAME, 'H1')
+	# song_name = WebDriverWait(driver,10).until(lambda d: d.find_elements(By.TAG_NAME, 'h1'))
+	song_name = driver.find_elements(By.TAG_NAME, 'h1')
 	song_title = song_name[0].text
 	lyrics_songs = driver.find_elements(By.ID, 'songLyricsDiv')
 	for lyrics in lyrics_songs:
-		save_to_file(song_title,lyrics.text)
+		save_to_file(song_title,lyrics.text.encode("utf-8"))
 driver.quit()
 
 
