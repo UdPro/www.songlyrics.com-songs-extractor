@@ -15,7 +15,9 @@ def save_to_file(filename, lyrics):
 		os.mkdir('Metallica')
 	if 'Lyrics' in filename:
 		filename = filename.replace('Lyrics', '')
-		filename = filename.replace('?', '')
+		# removing char which are not allowed in windows rule for renameing
+		for not_allowed_char in ['/'. '\\', ':','*', '?', '<', '>','|']:
+			filename = filename.replace(not_allowed_char, '')
 		filename = filename.strip()
 	f = open("Metallica/" + filename + ".txt", "w")
 	try:
