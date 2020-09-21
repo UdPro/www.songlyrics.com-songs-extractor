@@ -49,10 +49,12 @@ box_of_song = driver.find_elements(By.CLASS_NAME, 'listbox')
 # finding element with song a tag
 songs_list = box_of_song[0].find_elements(By.TAG_NAME, 'a')
 songs_link = []
-for song in tqdm(songs_list, desc = 'Extracting :'):
+print()
+for song in tqdm(songs_list, desc = 'Extracting Links'):
 	# extracting link value
 	songs_link.append(song.get_attribute('href'))
-for link in tqdm(songs_link ,desc = 'Download Lyrics:'):
+print()
+for link in tqdm(songs_link ,desc = 'Downloading Lyrics'):
 	# link = 'http://www.songlyrics.com/metallica/the-unforgiven-ii-lyrics/'
 	driver.get(link)
 	try:
